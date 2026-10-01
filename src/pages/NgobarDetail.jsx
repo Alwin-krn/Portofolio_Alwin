@@ -53,15 +53,15 @@ const NGOBAR_CONTENT = {
     ],
     captions: [
       "Sesi Pemaparan Materi Workshop NGOBAR oleh Alwin Dwi Kurniawan",
-      "Peserta Mengikuti Sesi Hands-On Coding Kerangka Website",
+      "Pembagian Sertifkasi kepada Pemateri oleh Ketua Acara HMTF UIA",
       "Penyampaian Konsep Dasar HTML & Styling CSS di Laboratorium",
-      "Pendampingan dan Diskusi Kode Bersama Peserta Workshop",
+      "Dokumentasi Bersama Panitia HMTF & Peserta Workshop NGOBAR",
       "Sesi Konsultasi dan Pemecahan Kendala Kode (Troubleshooting)",
       "Dokumentasi Pembukaan dan Pengenalan Program NGOBAR",
       "Sesi Demonstrasi Komponen Antarmuka Web oleh Pemateri",
       "Antusiasme Peserta Selama Pelatihan Ngoding Bareng HMTF",
       "Pendampingan Praktik Pembuatan Layout Website Responsif",
-      "Dokumentasi Bersama Panitia HMTF & Peserta Workshop NGOBAR"
+      "Pendampingan dan Diskusi Kode Bersama Peserta Workshop"
     ]
   },
   en: {
@@ -101,13 +101,13 @@ const NGOBAR_CONTENT = {
       "NGOBAR Workshop Presentation Session by Alwin Dwi Kurniawan",
       "Participants Following the Hands-On HTML/CSS Coding Session",
       "Delivering HTML Structural & CSS Styling Fundamentals",
-      "Code Assistance and Mentoring with Workshop Participants",
+      "Group Documentation with HMTF Committee & Participants",
       "Direct Code Troubleshooting & Consultation Session",
       "Opening & Program Introduction for NGOBAR HMTF UIA",
       "Live Demonstration of Web Interface Component Styling",
       "Participant Engagement During the HMTF Coding Session",
       "Guiding Practical Building of Responsive Web Layouts",
-      "Group Documentation with HMTF Committee & Participants"
+      "Code Assistance and Mentoring with Workshop Participants"
     ]
   }
 };
@@ -258,7 +258,7 @@ export default function NgobarDetail({ lang = 'id', isDark = true }) {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
-                  
+
                   {/* Overlay on hover */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="w-10 h-10 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center text-black scale-75 group-hover:scale-100 transition-transform duration-300">
