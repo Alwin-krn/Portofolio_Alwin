@@ -234,33 +234,42 @@ export default function PklDetail({ lang = 'id', isDark = true }) {
           </h2>
           <div className={`w-16 h-1 bg-primary rounded-full mb-10 transition-all duration-700 delay-[600ms] ${loaded ? 'opacity-100 scale-x-100 origin-left' : 'opacity-0 scale-x-0'}`}></div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {/* Clean Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {PKL_PHOTOS.map((photo, idx) => (
               <div
                 key={idx}
                 onClick={() => openLightbox(idx)}
-                className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:shadow-ambient dark:hover:shadow-ambient-dark
-                  border-outline-variant dark:border-dark-outline-variant hover:border-primary/50
+                className={`group rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-ambient dark:hover:shadow-ambient-dark
+                  bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant hover:border-primary/50 flex flex-col
                   ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${600 + (idx % 6) * 100}ms` }}
               >
-                <div className="aspect-[4/3] overflow-hidden">
+                {/* Image Container with Fixed Aspect Ratio */}
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-black/20 border-b border-outline-variant dark:border-dark-outline-variant flex items-center justify-center">
                   <img
                     src={photo}
                     alt={t.captions[idx]}
-                    className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${idx === 13 ? 'object-[center_25%]' : ''}`}
+                    className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${idx === 13 ? 'object-[center_25%]' : ''}`}
                     loading="lazy"
                   />
+                  
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center text-black scale-75 group-hover:scale-100 transition-transform duration-300">
+                      <ZoomIn className="w-5 h-5" />
+                    </div>
+                  </div>
                 </div>
 
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4 md:p-6">
-                  <p className="text-white font-medium text-xs md:text-sm translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                {/* Card Caption Info */}
+                <div className="p-4 flex items-center gap-3 flex-grow">
+                  <span className="font-mono text-xs font-bold px-2 py-1 rounded bg-primary/10 text-primary border border-primary/20 shrink-0">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-xs md:text-sm font-medium text-on-surface dark:text-dark-on-surface line-clamp-2">
                     {t.captions[idx]}
                   </p>
-                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75 shrink-0">
-                    <ZoomIn className="w-4 h-4 md:w-5 md:h-5" />
-                  </div>
                 </div>
               </div>
             ))}

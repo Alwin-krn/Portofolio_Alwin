@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, X, ChevronLeft, ChevronRight, Server, Wrench, ZoomIn } from 'lucide-react';
 import { CONTENT } from '../data/content';
 
-// Import all network images dynamically
+// Import all network images dynamically (excluding low quality/cropped screenshots)
 const imageModules = import.meta.glob('../images/network-docs/*.png', { eager: true, query: '?url', import: 'default' });
-const NETWORK_PHOTOS = Object.values(imageModules);
+const NETWORK_PHOTOS = Object.entries(imageModules)
+  .filter(([path]) => !path.includes('204906'))
+  .map(([, url]) => url);
 
 const NETWORK_CONTENT = {
   id: {
@@ -178,28 +180,42 @@ export default function NetworkDocs({ lang = 'id', isDark = true }) {
           </h2>
           <div className={`w-16 h-1 bg-primary rounded-full mb-10 transition-all duration-700 delay-[600ms] ${loaded ? 'opacity-100 scale-x-100 origin-left' : 'opacity-0 scale-x-0'}`}></div>
 
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 md:gap-6 space-y-4 md:space-y-6">
+          {/* Clean Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {NETWORK_PHOTOS.map((photo, idx) => (
               <div
                 key={idx}
                 onClick={() => openLightbox(idx)}
-                className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:shadow-ambient dark:hover:shadow-ambient-dark
-                  border-outline-variant dark:border-dark-outline-variant hover:border-primary/50 inline-block w-full
+                className={`group rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-ambient dark:hover:shadow-ambient-dark
+                  bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant hover:border-primary/50 flex flex-col
                   ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${600 + (idx % 6) * 100}ms` }}
               >
-                <div className="w-full">
+                {/* Image Container with Fixed Aspect Ratio */}
+                <div className="relative aspect-video w-full overflow-hidden bg-black/20 border-b border-outline-variant dark:border-dark-outline-variant flex items-center justify-center">
                   <img
                     src={photo}
                     alt={`Konfigurasi Jaringan ${idx + 1}`}
-                    className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 bg-white/5"
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 bg-white/5"
                     loading="lazy"
                   />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/80 backdrop-blur-sm flex items-center justify-center text-black translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <ZoomIn className="w-5 h-5" />
+                  
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center text-black scale-75 group-hover:scale-100 transition-transform duration-300">
+                      <ZoomIn className="w-5 h-5" />
+                    </div>
                   </div>
+                </div>
+
+                {/* Card Caption Info */}
+                <div className="p-4 flex items-center gap-3 flex-grow">
+                  <span className="font-mono text-xs font-bold px-2 py-1 rounded bg-primary/10 text-primary border border-primary/20 shrink-0">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-xs md:text-sm font-medium text-on-surface dark:text-dark-on-surface line-clamp-2">
+                    {lang === 'id' ? `Topologi & Konfigurasi Jaringan ${idx + 1}` : `Network Topology & Config ${idx + 1}`}
+                  </p>
                 </div>
               </div>
             ))}

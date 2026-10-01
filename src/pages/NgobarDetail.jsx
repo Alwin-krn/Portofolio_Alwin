@@ -1,109 +1,124 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X, ChevronLeft, ChevronRight, Globe, ShieldCheck, Database, Layers, Layout, ZoomIn } from 'lucide-react';
+import { ArrowLeft, X, ChevronLeft, ChevronRight, Code2, Users, Calendar, MapPin, Building2, Presentation, ZoomIn } from 'lucide-react';
 
-import imgLogin from '../images/tugas/Screenshot 2026-10-01 155551.png';
-import imgRegister from '../images/tugas/Screenshot 2026-10-01 155755.png';
-import imgPassVal from '../images/tugas/Screenshot 2026-10-01 155930.png';
-import imgLoginErr from '../images/tugas/Screenshot 2026-10-01 160002.png';
-import imgDashboard from '../images/tugas/Screenshot 2026-10-01 161941.png';
-import imgDropdown from '../images/tugas/Screenshot 2026-10-01 162024.png';
+import img1 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG-20260524-WA0125.jpg';
+import img2 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG-20260524-WA0128.jpg';
+import img3 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG-20260524-WA0147.jpg';
+import img4 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG-20260524-WA0148.jpg';
+import img5 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG_0003.JPG';
+import img6 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG_0061.JPG';
+import img7 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG_0079.JPG';
+import img8 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG_0080.JPG';
+import img9 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG_0102.JPG';
+import img10 from '../images/Ngobar(ngoding bareng)20-23Mei2026/IMG_0110.JPG';
 
-const TUGAS_PHOTOS = [
-  imgDashboard,
-  imgLogin,
-  imgRegister,
-  imgPassVal,
-  imgLoginErr,
-  imgDropdown
+const NGOBAR_PHOTOS = [
+  img1, img2, img3, img4, img5, img6, img7, img8, img9, img10
 ];
 
-const TUGAS_CONTENT = {
+const NGOBAR_CONTENT = {
   id: {
-    pageTitle: "Portal Web & Sistem Informasi Wilayah Terpadu",
-    subtitle: "UAS Desain & Pemrograman Web — Universitas Islam As-Syafi'iyah",
-    description: "Pengembangan aplikasi portal web modern yang mengintegrasikan sistem autentikasi pengguna lengkap dengan validasi keamanan real-time, manajemen sisa percobaan login, serta Sistem Informasi Wilayah Terpadu yang mencakup lebih dari 91.000 data wilayah Indonesia dengan fitur cascading dropdown yang interaktif.",
+    pageTitle: "Workshop NGOBAR (Ngoding Bareng)",
+    subtitle: "Panduan Dasar Menyusun Kerangka & Gaya Website",
+    organizer: "HMTF - Universitas Islam As-Syafi'iyah",
+    period: "20 - 23 Mei 2026",
+    location: "Gedung Alawiyah Lantai 4, UIA",
+    roleBadge: "Pemateri & Instruktur Utama",
+    description: "Berperan sebagai Pemateri Utama dalam kegiatan Workshop NGOBAR (Ngoding Bareng) yang diselenggarakan oleh Himpunan Mahasiswa Teknik Informatika (HMTF) Universitas Islam As-Syafi'iyah. Workshop ini berfokus pada pengajaran dasar pembuatan struktur halaman web (HTML) dan perancangan gaya tampilan antarmuka (CSS) secara hands-on bagi mahasiswa.",
     backBtn: "Kembali",
-    galleryTitle: "Galeri Dokumentasi & Tangkapan Layar",
-    activitiesTitle: "Fitur & Komponen Utama",
+    galleryTitle: "Galeri Dokumentasi Kegiatan",
+    activitiesTitle: "Sorotan Kegiatan & Peran Utama",
     activities: [
       {
-        icon: ShieldCheck,
-        title: "Autentikasi & Keamanan Akun",
-        desc: "Sistem login dan registrasi interaktif dilengkapi validasi password kuat (minimal 8 karakter, huruf besar/kecil, angka, simbol) serta penanganan sisa percobaan login (rate limiting)."
+        icon: Presentation,
+        title: "Pemateri Utama Workshop",
+        desc: "Menyampaikan materi komprehensif mengenai konsep dasar struktur HTML, sintaks CSS, dan sintaksis tata letak web modern."
       },
       {
-        icon: Database,
-        title: "Sistem Informasi Wilayah Terpadu",
-        desc: "Pengelolaan dan visualisasi lebih dari 91.611 data wilayah dari 38 Provinsi di Indonesia yang dapat diakses secara instan dan efisien."
+        icon: Code2,
+        title: "Live Coding & Demonstrasi",
+        desc: "Melakukan demonstrasi penyusunan komponen website secara langsung agar peserta memahami sintaks dan implementasi visual."
       },
       {
-        icon: Layers,
-        title: "Cascading Dynamic Dropdown",
-        desc: "Filter wilayah bertingkat dinamis dari tingkat Provinsi, Kabupaten/Kota, Kecamatan, hingga Kelurahan/Desa yang saling terintegrasi."
+        icon: Users,
+        title: "Mentoring & Sesi Hands-on",
+        desc: "Mendampingi peserta secara individu dan kelompok dalam menyelesaikan latihan penulisan kode HTML/CSS di tempat."
       },
       {
-        icon: Layout,
-        title: "Desain Antarmuka Responsif & Modern",
-        desc: "Implementasi antarmuka intuitif bertema Dark Mode dengan indikator statistik ringkas, tata letak rapi, serta pengalaman pengguna yang optimal."
+        icon: Building2,
+        title: "Kolaborasi Akademik (HMTF UIA)",
+        desc: "Bekerjasama dengan pengurus Himpunan Mahasiswa Teknik Informatika UIA dalam memfasilitasi peningkatan keahlian teknis web development."
       }
     ],
     captions: [
-      "Dashboard Portal & Sistem Informasi Wilayah Terpadu (91.611 Data)",
-      "Halaman Autentikasi / Login UIA Portal",
-      "Form Registrasi Akun Pengguna Baru",
-      "Validasi Keamanan Password Real-Time",
-      "Penanganan Gagal Login & Sisa Percobaan (Rate Limiting)",
-      "Integrasi Data Wilayah Cascading Dropdown (Provinsi/Kota/Kec/Desa)"
+      "Sesi Pemaparan Materi Workshop NGOBAR oleh Alwin Dwi Kurniawan",
+      "Peserta Mengikuti Sesi Hands-On Coding Kerangka Website",
+      "Penyampaian Konsep Dasar HTML & Styling CSS di Laboratorium",
+      "Pendampingan dan Diskusi Kode Bersama Peserta Workshop",
+      "Sesi Konsultasi dan Pemecahan Kendala Kode (Troubleshooting)",
+      "Dokumentasi Pembukaan dan Pengenalan Program NGOBAR",
+      "Sesi Demonstrasi Komponen Antarmuka Web oleh Pemateri",
+      "Antusiasme Peserta Selama Pelatihan Ngoding Bareng HMTF",
+      "Pendampingan Praktik Pembuatan Layout Website Responsif",
+      "Dokumentasi Bersama Panitia HMTF & Peserta Workshop NGOBAR"
     ]
   },
   en: {
-    pageTitle: "Web Portal & Integrated Regional Information System",
-    subtitle: "Web Design & Programming Project — Universitas Islam As-Syafi'iyah",
-    description: "Development of a modern web portal application integrating full user authentication with real-time security validation, login retry rate limiting, and an Integrated Regional Information System covering over 91,000 regional records across Indonesia with interactive cascading dropdowns.",
+    pageTitle: "NGOBAR (Ngoding Bareng) Workshop",
+    subtitle: "Fundamentals of Website Structure & Styling",
+    organizer: "HMTF - Universitas Islam As-Syafi'iyah",
+    period: "May 20 - 23, 2026",
+    location: "Alawiyah Building 4th Floor, UIA",
+    roleBadge: "Main Speaker & Instructor",
+    description: "Served as the Keynote Speaker and Main Instructor for the NGOBAR (Ngoding Bareng) Workshop organized by the Informatics Engineering Student Association (HMTF) at Universitas Islam As-Syafi'iyah. The workshop provided hands-on training on HTML structure and CSS styling fundamentals for university students.",
     backBtn: "Go Back",
-    galleryTitle: "Documentation & Screenshot Gallery",
-    activitiesTitle: "Key Features & Components",
+    galleryTitle: "Event Documentation Gallery",
+    activitiesTitle: "Key Highlights & Responsibilities",
     activities: [
       {
-        icon: ShieldCheck,
-        title: "User Authentication & Security",
-        desc: "Interactive login and registration system featuring strong password validation (min 8 chars, uppercase/lowercase, numbers, symbols) and login rate limiting."
+        icon: Presentation,
+        title: "Main Workshop Instructor",
+        desc: "Delivered comprehensive sessions covering HTML structural markup, CSS rules, and modern web layout principles."
       },
       {
-        icon: Database,
-        title: "Integrated Regional Data System",
-        desc: "Management and visualization of 91,611+ regional data points across 38 Indonesian Provinces with instant retrieval."
+        icon: Code2,
+        title: "Live Coding Demonstrations",
+        desc: "Conducted real-time live coding demonstrations to show practical component building and styling techniques."
       },
       {
-        icon: Layers,
-        title: "Cascading Dynamic Dropdowns",
-        desc: "Multi-tiered dynamic location filtering spanning Province, Regency/City, District, down to Village level."
+        icon: Users,
+        title: "Hands-on Mentoring",
+        desc: "Guided participants individually and in groups to solve coding exercises and build responsive web pages."
       },
       {
-        icon: Layout,
-        title: "Responsive & Modern UI Design",
-        desc: "Sleek Dark Mode interface featuring metric overview cards, clean visual hierarchy, and an optimized user experience."
+        icon: Building2,
+        title: "Academic Collaboration (HMTF UIA)",
+        desc: "Collaborated with the Informatics Student Association to foster technical web development skills across campus."
       }
     ],
     captions: [
-      "Portal Dashboard & Integrated Regional Information System (91,611 Records)",
-      "UIA Portal Authentication / Login Page",
-      "New User Account Registration Form",
-      "Real-Time Password Security Validation",
-      "Login Failure Handling & Retry Limits (Rate Limiting)",
-      "Regional Data Integration via Cascading Dropdown (Province/City/District/Village)"
+      "NGOBAR Workshop Presentation Session by Alwin Dwi Kurniawan",
+      "Participants Following the Hands-On HTML/CSS Coding Session",
+      "Delivering HTML Structural & CSS Styling Fundamentals",
+      "Code Assistance and Mentoring with Workshop Participants",
+      "Direct Code Troubleshooting & Consultation Session",
+      "Opening & Program Introduction for NGOBAR HMTF UIA",
+      "Live Demonstration of Web Interface Component Styling",
+      "Participant Engagement During the HMTF Coding Session",
+      "Guiding Practical Building of Responsive Web Layouts",
+      "Group Documentation with HMTF Committee & Participants"
     ]
   }
 };
 
-export default function TugasDetail({ lang = 'id', isDark = true }) {
+export default function NgobarDetail({ lang = 'id', isDark = true }) {
   const navigate = useNavigate();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
-  const t = TUGAS_CONTENT[lang] || TUGAS_CONTENT.id;
+  const t = NGOBAR_CONTENT[lang] || NGOBAR_CONTENT.id;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -116,8 +131,8 @@ export default function TugasDetail({ lang = 'id', isDark = true }) {
     if (!lightboxOpen) return;
     const handleKey = (e) => {
       if (e.key === 'Escape') setLightboxOpen(false);
-      if (e.key === 'ArrowRight') setLightboxIdx(i => (i + 1) % TUGAS_PHOTOS.length);
-      if (e.key === 'ArrowLeft') setLightboxIdx(i => (i - 1 + TUGAS_PHOTOS.length) % TUGAS_PHOTOS.length);
+      if (e.key === 'ArrowRight') setLightboxIdx(i => (i + 1) % NGOBAR_PHOTOS.length);
+      if (e.key === 'ArrowLeft') setLightboxIdx(i => (i - 1 + NGOBAR_PHOTOS.length) % NGOBAR_PHOTOS.length);
     };
     document.addEventListener('keydown', handleKey);
     document.body.style.overflow = 'hidden';
@@ -154,8 +169,8 @@ export default function TugasDetail({ lang = 'id', isDark = true }) {
           <div className={`mt-10 md:mt-16 flex flex-col md:flex-row md:items-start gap-8 transition-all duration-700 delay-150 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-fixed dark:bg-primary/20 text-primary text-sm font-medium mb-6">
-                <Globe className="w-3.5 h-3.5" />
-                <span>Web Application Project</span>
+                <Presentation className="w-3.5 h-3.5" />
+                <span>{t.roleBadge}</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-4">
                 {t.pageTitle}
@@ -164,9 +179,18 @@ export default function TugasDetail({ lang = 'id', isDark = true }) {
                 {t.description}
               </p>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-lowest/80 dark:bg-dark-surface-lowest/80 border border-outline-variant dark:border-dark-outline-variant backdrop-blur-sm">
-                  <span className="text-xs font-mono font-medium text-primary">{t.subtitle}</span>
+                  <Building2 className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium">{t.organizer}</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-lowest/80 dark:bg-dark-surface-lowest/80 border border-outline-variant dark:border-dark-outline-variant backdrop-blur-sm">
+                  <Calendar className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium">{t.period}</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-lowest/80 dark:bg-dark-surface-lowest/80 border border-outline-variant dark:border-dark-outline-variant backdrop-blur-sm">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium">{t.location}</span>
                 </div>
               </div>
             </div>
@@ -174,7 +198,7 @@ export default function TugasDetail({ lang = 'id', isDark = true }) {
         </div>
       </div>
 
-      {/* FEATURES SECTION */}
+      {/* ACTIVITIES SECTION */}
       <section className="py-12 md:py-16 px-4 md:px-6 bg-surface-low dark:bg-dark-surface-low">
         <div className="max-w-6xl mx-auto">
           <h2 className={`text-2xl md:text-3xl font-bold mb-2 transition-all duration-700 delay-300 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -184,7 +208,7 @@ export default function TugasDetail({ lang = 'id', isDark = true }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {t.activities.map((activity, idx) => {
-              const IconComp = activity.icon || Globe;
+              const IconComp = activity.icon || Code2;
               return (
                 <div
                   key={idx}
@@ -217,21 +241,21 @@ export default function TugasDetail({ lang = 'id', isDark = true }) {
 
           {/* Clean Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TUGAS_PHOTOS.map((photo, idx) => (
+            {NGOBAR_PHOTOS.map((photo, idx) => (
               <div
                 key={idx}
                 onClick={() => openLightbox(idx)}
-                className={`group rounded-2xl border overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-ambient dark:hover:shadow-ambient-dark
+                className={`group rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-ambient dark:hover:shadow-ambient-dark
                   bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant hover:border-primary/50 flex flex-col
                   ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${600 + (idx % 6) * 100}ms` }}
               >
                 {/* Image Container with Fixed Aspect Ratio */}
-                <div className="relative aspect-video w-full overflow-hidden bg-black/20 border-b border-outline-variant dark:border-dark-outline-variant flex items-center justify-center">
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-black/20 border-b border-outline-variant dark:border-dark-outline-variant flex items-center justify-center">
                   <img
                     src={photo}
-                    alt={t.captions[idx] || `Screenshot Tugas ${idx + 1}`}
-                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                    alt={t.captions[idx] || `Foto NGOBAR ${idx + 1}`}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
                   
@@ -271,27 +295,27 @@ export default function TugasDetail({ lang = 'id', isDark = true }) {
             <X className="w-5 h-5 md:w-6 md:h-6" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); setLightboxIdx(i => (i - 1 + TUGAS_PHOTOS.length) % TUGAS_PHOTOS.length); }}
+            onClick={(e) => { e.stopPropagation(); setLightboxIdx(i => (i - 1 + NGOBAR_PHOTOS.length) % NGOBAR_PHOTOS.length); }}
             className="absolute left-2 md:left-8 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95"
           >
             <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); setLightboxIdx(i => (i + 1) % TUGAS_PHOTOS.length); }}
+            onClick={(e) => { e.stopPropagation(); setLightboxIdx(i => (i + 1) % NGOBAR_PHOTOS.length); }}
             className="absolute right-2 md:left-auto md:right-8 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95"
           >
             <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
           </button>
           <div className="w-full max-w-7xl max-h-[90vh] mx-auto px-2 sm:px-12 md:px-16 flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
             <img
-              src={TUGAS_PHOTOS[lightboxIdx]}
+              src={NGOBAR_PHOTOS[lightboxIdx]}
               alt={`Detail ${lightboxIdx}`}
               className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl animate-scaleIn bg-black/50"
               key={lightboxIdx}
             />
             <div className="text-center mt-4 max-w-xl">
               <p className="text-white font-medium text-sm md:text-base mb-1">{t.captions[lightboxIdx]}</p>
-              <p className="text-white/60 text-xs">{lightboxIdx + 1} / {TUGAS_PHOTOS.length}</p>
+              <p className="text-white/60 text-xs">{lightboxIdx + 1} / {NGOBAR_PHOTOS.length}</p>
             </div>
           </div>
         </div>
