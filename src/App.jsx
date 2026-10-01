@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Briefcase, GraduationCap, CheckCircle2, Mail, Phone, MapPin, ChevronRight, ArrowUpRight, Server } from 'lucide-react';
+import { Briefcase, GraduationCap, CheckCircle2, Mail, Phone, MapPin, ChevronRight, ArrowUpRight, Server, Globe } from 'lucide-react';
 
 import Navbar from './components/Navbar';
 import Preloader from './components/Preloader';
@@ -9,12 +9,14 @@ import ScrollProgress from './components/ScrollProgress';
 import PklDetail from './pages/PklDetail';
 import NaratasDetail from './pages/NaratasDetail';
 import NetworkDocs from './pages/NetworkDocs';
+import TugasDetail from './pages/TugasDetail';
 import WhatsAppPopup from './components/WhatsAppPopup';
 
 import { CONTENT } from './data/content';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import heroBg from './images/hero-bg.jpg';
 import topoThumbnail from './images/topologi-utama.png';
+import tugasThumbnail from './images/tugas/Screenshot 2026-10-01 161941.png';
 
 function HomePage({ lang, setLang, isDark, setIsDark }) {
   const navigate = useNavigate();
@@ -247,31 +249,43 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
                 </div>
               </div>
 
-              {/* Placeholder Project 2 */}
+              {/* Project 2: Web Portal & Data Wilayah */}
               <div 
-                className="reveal cursor-pointer group rounded-2xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 glow-border hover:shadow-ambient dark:hover:shadow-ambient-dark bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant flex flex-col opacity-60 hover:opacity-100"
+                className="reveal cursor-pointer group rounded-2xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 glow-border hover:shadow-ambient dark:hover:shadow-ambient-dark bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant flex flex-col"
+                onClick={() => navigate('/tugas-web')}
               >
-                {/* Empty Thumbnail */}
-                <div className="relative aspect-video w-full overflow-hidden border-b border-outline-variant dark:border-dark-outline-variant bg-black/10 flex items-center justify-center">
-                  <span className="text-on-surface-variant dark:text-dark-on-surface-variant text-sm font-mono tracking-widest">COMING SOON</span>
+                {/* Thumbnail Image */}
+                <div className="relative aspect-video w-full overflow-hidden border-b border-outline-variant dark:border-dark-outline-variant bg-black/20">
+                  <img 
+                    src={tugasThumbnail} 
+                    alt="Portal Web & Data Wilayah Thumbnail" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+                  
+                  {/* Arrow Icon over image */}
+                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                    <ArrowUpRight className="w-5 h-5" />
+                  </div>
                 </div>
 
                 {/* Card Content */}
                 <div className="p-5 md:p-6 flex-grow flex flex-col">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-surface-low dark:bg-dark-surface-low border border-outline-variant dark:border-dark-outline-variant flex items-center justify-center text-on-surface-variant group-hover:scale-110 transition-transform shrink-0">
-                      <Briefcase className="w-5 h-5" />
+                    <div className="w-10 h-10 rounded-xl bg-primary-fixed dark:bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shrink-0">
+                      <Globe className="w-5 h-5" />
                     </div>
                     <h3 className="font-bold text-lg xl:text-xl text-on-surface dark:text-dark-on-surface line-clamp-2">
-                      {lang === 'id' ? 'Proyek Mendatang' : 'Upcoming Project'}
+                      {lang === 'id' ? 'Portal Web & Data Wilayah' : 'Web Portal & Regional Data'}
                     </h3>
                   </div>
-                  <p className="text-sm text-on-surface-variant dark:text-dark-on-surface-variant mb-6 leading-relaxed flex-grow">
-                    {lang === 'id' ? 'Detail proyek akan segera ditambahkan di sini.' : 'Project details will be added here soon.'}
+                  <p className="text-sm text-on-surface-variant dark:text-dark-on-surface-variant mb-6 leading-relaxed flex-grow line-clamp-3">
+                    {lang === 'id' ? 'Pengembangan aplikasi portal web interaktif, validasi autentikasi pengguna, dan Sistem Informasi Wilayah Terpadu (UIA).' : 'Development of interactive web portal application, user authentication validation, and Integrated Regional Information System (UIA).'}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-auto">
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant border-dashed opacity-50">Label</span>
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant border-dashed opacity-50">Label</span>
+                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Web Dev</span>
+                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Autentikasi</span>
+                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Cascading Data</span>
                   </div>
                 </div>
               </div>
@@ -398,6 +412,7 @@ export default function App() {
       <Route path="/pkl-ftth" element={<PklDetail lang={lang} isDark={isDark} />} />
       <Route path="/naratas-support" element={<NaratasDetail lang={lang} isDark={isDark} />} />
       <Route path="/network-docs" element={<NetworkDocs lang={lang} isDark={isDark} />} />
+      <Route path="/tugas-web" element={<TugasDetail lang={lang} isDark={isDark} />} />
     </Routes>
   );
 }
