@@ -318,7 +318,7 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
               </div>
               <p className="max-w-2xl text-on-surface-variant dark:text-dark-on-surface-variant">{t.sectionTitles.skillsDesc}</p>
             </div>
-            <div className="flex flex-wrap justify-start gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               {t.skills.map((skill, idx) => (
                 <div key={idx} className="reveal px-5 py-3 rounded-lg border flex items-center gap-2 cursor-default transition-all duration-300 hover:scale-105 glow-border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant text-on-surface dark:text-dark-on-surface" style={{ transitionDelay: `${(idx % 5) * 100}ms` }}>
                   <CheckCircle2 className="text-primary w-4 h-4" />
@@ -338,25 +338,25 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
             </div>
             <p className="reveal text-sm md:text-lg mb-8 md:mb-12 text-on-surface-variant dark:text-dark-on-surface-variant text-left">{t.sectionTitles.contactDesc}</p>
 
-            <div className="grid md:grid-cols-2 gap-4 md:gap-8">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left Column: Contact Links */}
-              <div className="space-y-4 md:space-y-6">
-                <a href={`mailto:${t.personal.email}`} className="reveal flex items-center gap-3 md:gap-4 p-3 md:p-5 rounded-xl border transition-all duration-300 hover:scale-[1.02] glow-border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant">
-                  <div className="h-10 w-10 md:h-14 md:w-14 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><Mail className="w-4 h-4 md:w-6 md:h-6" /></div>
-                  <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">Email</p><p className="font-medium text-sm md:text-lg break-all">{t.personal.email}</p></div>
+              <div className="space-y-3 md:space-y-4">
+                <a href={`mailto:${t.personal.email}`} className="reveal flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] glow-border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant">
+                  <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><Mail className="w-4 h-4 md:w-5 md:h-5" /></div>
+                  <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">Email</p><p className="font-medium text-sm md:text-base break-all">{t.personal.email}</p></div>
                 </a>
-                <a href={`https://wa.me/${t.personal.phone}`} target="_blank" rel="noreferrer" className="reveal reveal-delay-1 flex items-center gap-3 md:gap-4 p-3 md:p-5 rounded-xl border transition-all duration-300 hover:scale-[1.02] glow-border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant">
-                  <div className="h-10 w-10 md:h-14 md:w-14 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><Phone className="w-4 h-4 md:w-6 md:h-6" /></div>
-                  <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">WhatsApp</p><p className="font-medium text-sm md:text-lg break-words">{t.personal.formattedPhone}</p></div>
+                <a href={`https://wa.me/${t.personal.phone}`} target="_blank" rel="noreferrer" className="reveal reveal-delay-1 flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] glow-border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant">
+                  <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><Phone className="w-4 h-4 md:w-5 md:h-5" /></div>
+                  <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">WhatsApp</p><p className="font-medium text-sm md:text-base break-words">{t.personal.formattedPhone}</p></div>
                 </a>
               </div>
 
               {/* Right Column: Location & Map */}
               <div>
                 <div className="reveal reveal-delay-2 h-full rounded-xl border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant overflow-hidden flex flex-col">
-                  <div className="flex items-center gap-3 md:gap-4 p-3 md:p-5 border-b border-outline-variant dark:border-dark-outline-variant">
-                    <div className="h-10 w-10 md:h-14 md:w-14 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><MapPin className="w-4 h-4 md:w-6 md:h-6" /></div>
-                    <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">Lokasi</p><p className="font-medium text-sm md:text-lg break-words">{t.personal.location}</p></div>
+                  <div className="flex items-center gap-3 md:gap-4 p-3 md:p-4 border-b border-outline-variant dark:border-dark-outline-variant">
+                    <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><MapPin className="w-4 h-4 md:w-5 md:h-5" /></div>
+                    <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">Lokasi</p><p className="font-medium text-sm md:text-base break-words">{t.personal.location}</p></div>
                   </div>
                   <div className="w-full h-48 md:flex-grow min-h-[200px]">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126907.08316279932!2d106.90151044717147!3d-6.284245648580629!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698d8546ad633d%3A0x79e8de8965402078!2sKota%20Bks%2C%20Jawa%20Barat!5e0!3m2!1sid!2sid!4v1709400000000!5m2!1sid!2sid" width="100%" height="100%" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Lokasi Bekasi" className="border-0 grayscale dark:invert dark:contrast-75 transition-all duration-500 block"></iframe>

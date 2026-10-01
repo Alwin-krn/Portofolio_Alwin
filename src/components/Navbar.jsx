@@ -47,15 +47,14 @@ export default function Navbar({ content, lang, onToggleLang, isDark, onToggleTh
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <a href="#" className="font-bold text-xl tracking-tighter flex items-center gap-3 group font-mono">
-          <span className="flex items-center justify-center">
-            <img src={logoImg} alt="Logo" className="w-7 h-7 rounded-full group-hover:scale-110 transition-transform object-contain invert dark:invert-0" />
+          <span className="flex items-baseline">
+            <span className="transition-all" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+              {glitchText.before}
+              {glitchText.symbol && <span className="text-primary opacity-70">{glitchText.symbol}</span>}
+              {glitchText.after}
+            </span>
+            <span className="text-primary font-mono text-sm opacity-50 ml-1">.dev</span>
           </span>
-          <span className="transition-all" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            {glitchText.before}
-            {glitchText.symbol && <span className="text-primary opacity-70">{glitchText.symbol}</span>}
-            {glitchText.after}
-          </span>
-          <span className="text-primary font-mono text-sm opacity-50">.dev</span>
         </a>
 
         {/* Desktop Menu */}
@@ -63,14 +62,21 @@ export default function Navbar({ content, lang, onToggleLang, isDark, onToggleTh
           <div className="flex gap-6">
             {t.nav.map((item, idx) => {
               const isDownloadCv = item === 'Unduh CV' || item === 'Download CV' || item === 'Resume';
+              const isContact = item === 'Kontak' || item === 'Contact';
+              const waMessage = lang === 'id' 
+                ? "Halo Alwin, saya melihat portofolio Anda dan tertarik untuk berdiskusi lebih lanjut."
+                : "Hello Alwin, I saw your portfolio and I'm interested in discussing further.";
+              const waUrl = `https://wa.me/${t.personal.phone}?text=${encodeURIComponent(waMessage)}`;
+
               return (
                 <a
                   key={idx}
-                  href={isDownloadCv ? "/CV-Alwin-Dwi-Kurniawan.pdf" : `#${ANCHOR_LINKS[idx]}`}
+                  href={isDownloadCv ? "/CV-Alwin-Dwi-Kurniawan.pdf" : (isContact ? waUrl : `#${ANCHOR_LINKS[idx]}`)}
                   onClick={(e) => {
-                    if (!isDownloadCv) handleSmoothScroll(e, ANCHOR_LINKS[idx]);
+                    if (!isDownloadCv && !isContact) handleSmoothScroll(e, ANCHOR_LINKS[idx]);
                   }}
-                  {...(isDownloadCv ? { download: "CV-Alwin-Dwi-Kurniawan.pdf", target: "_blank", rel: "noreferrer" } : {})}
+                  {...(isDownloadCv ? { download: "CV-Alwin-Dwi-Kurniawan.pdf" } : {})}
+                  {...(isDownloadCv || isContact ? { target: "_blank", rel: "noreferrer" } : {})}
                   className="text-sm font-medium text-on-surface-variant hover:text-primary dark:text-dark-on-surface-variant transition-colors flex items-center gap-1.5"
                 >
                   <span className="font-mono text-[10px] text-primary opacity-50">{navIndexes[idx] || '005'}</span>
@@ -125,14 +131,21 @@ export default function Navbar({ content, lang, onToggleLang, isDark, onToggleTh
           <div className="flex flex-col px-6 py-4 gap-4">
             {t.nav.map((item, idx) => {
               const isDownloadCv = item === 'Unduh CV' || item === 'Download CV' || item === 'Resume';
+              const isContact = item === 'Kontak' || item === 'Contact';
+              const waMessage = lang === 'id' 
+                ? "Halo Alwin, saya melihat portofolio Anda dan tertarik untuk berdiskusi lebih lanjut."
+                : "Hello Alwin, I saw your portfolio and I'm interested in discussing further.";
+              const waUrl = `https://wa.me/${t.personal.phone}?text=${encodeURIComponent(waMessage)}`;
+
               return (
                 <a
                   key={idx}
-                  href={isDownloadCv ? "/CV-Alwin-Dwi-Kurniawan.pdf" : `#${ANCHOR_LINKS[idx]}`}
+                  href={isDownloadCv ? "/CV-Alwin-Dwi-Kurniawan.pdf" : (isContact ? waUrl : `#${ANCHOR_LINKS[idx]}`)}
                   onClick={(e) => {
-                    if (!isDownloadCv) handleSmoothScroll(e, ANCHOR_LINKS[idx]);
+                    if (!isDownloadCv && !isContact) handleSmoothScroll(e, ANCHOR_LINKS[idx]);
                   }}
-                  {...(isDownloadCv ? { download: "CV-Alwin-Dwi-Kurniawan.pdf", target: "_blank", rel: "noreferrer" } : {})}
+                  {...(isDownloadCv ? { download: "CV-Alwin-Dwi-Kurniawan.pdf" } : {})}
+                  {...(isDownloadCv || isContact ? { target: "_blank", rel: "noreferrer" } : {})}
                   className="text-sm font-medium py-2 border-b border-outline-variant dark:border-dark-outline-variant text-on-surface-variant dark:text-dark-on-surface-variant flex items-center gap-2 hover:text-primary"
                 >
                   <span className="font-mono text-[10px] text-primary opacity-50">{navIndexes[idx] || '005'}</span>

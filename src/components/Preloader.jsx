@@ -23,9 +23,9 @@ export default function Preloader() {
         fadeOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      <div className="flex flex-col items-center gap-4 animate-pulse-icon">
-        <img src={logoImg} alt="Loading Logo" className="w-14 h-14 rounded-full object-contain invert dark:invert-0" />
-        <p className="font-mono text-xs tracking-widest text-primary uppercase">
+      <div className="flex flex-col items-center justify-center gap-3 animate-pulse-icon">
+        <img src={logoImg} alt="Loading Logo" className="w-14 h-14 object-contain invert dark:invert-0" />
+        <p className="font-mono text-xs tracking-widest text-primary uppercase text-center ml-1">
           loading...
         </p>
       </div>
