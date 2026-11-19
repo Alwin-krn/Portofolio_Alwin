@@ -2,7 +2,7 @@
 
 Website portofolio pribadi yang menampilkan profil, proyek, dan kemampuan saya di bidang **Web Development, Jaringan, dan Data**.
 
-🔗 **Live site:** [https://alwin.my.id](https://alwin.my.id)
+🔗 **Live site:** [https://alwin.my.id](https://www.alwin.my.id)
 
 ## Fitur
 
