@@ -57,7 +57,7 @@ npm run preview
 
 ## Kontak
 
-- Website: [alwin.my.id](https://alwin.my.id)
+- Website: [alwin.my.id](https://www.alwin.my.id)
 - GitHub: [@Alwin-krn](https://github.com/Alwin-krn)
 
 ---
