@@ -28,13 +28,35 @@
     })();
   </script>
 
+  <!-- Alamat utama situs: www.alwin.my.id. Canonical dibuat per halaman (beranda dan /proyek/...)
+       karena situs ini SPA dan semua halaman memakai satu index.html. -->
+  <script>
+    (function () {
+      var link = document.createElement('link');
+      link.rel = 'canonical';
+      link.href = 'https://www.alwin.my.id' + location.pathname;
+      document.head.appendChild(link);
+    })();
+  </script>
+
+  <!-- Nama situs untuk Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Alwin Dwi Kurniawan",
+    "alternateName": "Alwin",
+    "url": "https://www.alwin.my.id/"
+  }
+  </script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Alwin Dwi Kurniawan",
     "alternateName": "Alwin",
-    "url": "https://alwin.my.id",
+    "url": "https://www.alwin.my.id",
     "jobTitle": "Web Developer, Data Analyst & Junior Network Engineer",
     "alumniOf": {
       "@type": "CollegeOrUniversity",
