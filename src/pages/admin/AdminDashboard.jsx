@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowUp, ArrowDown, Pencil, Trash2, ExternalLink, Plus, LogOut } from 'lucide-react';
+import { ArrowUp, ArrowDown, Pencil, Trash2, ExternalLink, Plus, LogOut, User } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { getProjects, deleteProject, reorderProjects } from '../../lib/projects';
 
@@ -66,7 +66,11 @@ export default function AdminDashboard() {
             <h1 className="text-2xl md:text-3xl font-bold">Proyek & Dokumentasi</h1>
             <Link to="/" className="text-sm text-primary hover:underline">Lihat situs</Link>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Link to="/admin/profil"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-outline-variant dark:border-dark-outline-variant hover:border-primary transition">
+              <User className="w-4 h-4" /> Edit profil
+            </Link>
             <Link to="/admin/proyek/baru"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-primary text-black hover:opacity-90 transition">
               <Plus className="w-4 h-4" /> Tambah proyek
