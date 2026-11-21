@@ -2,11 +2,32 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alwin Dwi Kurniawan | Portfolio</title>
 
-  <!-- Tambahkan di sini -->
+  <!-- Favicon: mengikuti pengaturan terang/gelap di perangkat pengunjung (bukan tombol tema situs).
+       - Perangkat mode TERANG  -> ikon hitam (favicon-hitam.png)
+       - Perangkat mode GELAP   -> ikon putih (favicon.png)
+       Kedua file ada di folder public/ -->
+  <link rel="icon" type="image/png" href="/favicon-dark.png" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/png" href="/favicon.png" media="(prefers-color-scheme: dark)" />
+
+  <!-- Tema situs: default TERANG. Mode gelap hanya aktif jika pengunjung memilihnya sendiri.
+       Dijalankan sebelum render agar tidak ada kedipan. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -36,16 +57,26 @@
   }
   </script>
 
-  
-  <!--Analisis-->
-  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-KVX4G5MD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-</script>
+  <!-- Analisis (Google Tag Manager + Consent Mode)
+       Default: analitik DITOLAK sampai pengunjung menyetujui lewat banner cookie.
+       Status persetujuan yang tersimpan diterapkan oleh src/components/CookieConsent.jsx -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('consent', 'default', {
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      wait_for_update: 500
+    });
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KVX4G5MD');
+  </script>
 
-  
   <!-- Modern Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

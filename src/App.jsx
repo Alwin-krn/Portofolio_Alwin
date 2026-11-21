@@ -1,32 +1,56 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Briefcase, GraduationCap, CheckCircle2, Mail, Phone, MapPin, ChevronRight, ArrowUpRight, Server, Globe, Presentation } from 'lucide-react';
+import { lazy, Suspense, useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Briefcase, GraduationCap, CheckCircle2, Mail, Phone, MapPin, ChevronRight, ArrowUpRight } from 'lucide-react';
 
 import Navbar from './components/Navbar';
 import Preloader from './components/Preloader';
 import CustomCursor from './components/CustomCursor';
+import CookieConsent from './components/CookieConsent';
 import ScrollProgress from './components/ScrollProgress';
-import PklDetail from './pages/PklDetail';
-import NaratasDetail from './pages/NaratasDetail';
-import NetworkDocs from './pages/NetworkDocs';
-import TugasDetail from './pages/TugasDetail';
-import NgobarDetail from './pages/NgobarDetail';
 import WhatsAppPopup from './components/WhatsAppPopup';
+
+// Halaman yang memakai Supabase dimuat secara lazy, jadi beranda tetap tampil
+// walaupun konfigurasi Supabase (.env) bermasalah.
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
+const RequireAdmin = lazy(() => import('./components/RequireAdmin'));
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const ProjectForm = lazy(() => import('./pages/admin/ProjectForm'));
+const ProjectCards = lazy(() => import('./components/ProjectCards'));
 
 import { CONTENT } from './data/content';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import heroBg from './images/hero-bg.jpg';
-import topoThumbnail from './images/topologi-utama.png';
-import tugasThumbnail from './images/tugas/Screenshot 2026-10-01 161941.png';
-import ngobarThumbnail from './images/Ngobar(ngoding bareng)20-23Mei2026/IMG-20260524-WA0125.jpg';
 
 function HomePage({ lang, setLang, isDark, setIsDark }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const containerRef = useScrollReveal([lang]);
 
   const t = CONTENT[lang];
   const currentYear = new Date().getFullYear();
+
+  // Saat kembali dari halaman detail, langsung scroll ke bagian yang dituju
+  // (misalnya 'pengalaman' atau 'proyek'), lalu hapus state agar refresh tidak mengulanginya.
+  useEffect(() => {
+    const target = location.state?.scrollTo;
+    if (!target) return;
+
+    const timer = setTimeout(() => {
+      document.getElementById(target)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      navigate(location.pathname, { replace: true, state: null });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [location.state, location.pathname, navigate]);
+
+  // Link WhatsApp dengan pesan yang sudah terisi (mengikuti bahasa aktif)
+  const waMessage =
+    lang === 'id'
+      ? 'Halo Alwin, saya melihat portofolio Anda dan ingin berdiskusi.'
+      : 'Hi Alwin, I saw your portfolio and would like to talk.';
+  const waLink = `https://wa.me/${t.personal.phone}?text=${encodeURIComponent(waMessage)}`;
 
   return (
     <div ref={containerRef} className="noise-overlay bg-surface text-on-surface dark:bg-dark-surface dark:text-dark-on-surface transition-colors duration-500 selection:bg-primary/20 selection:text-primary min-h-screen">
@@ -81,10 +105,12 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
               )}
 
               <div className="reveal reveal-delay-3 flex flex-wrap gap-4">
-                <a href="contact" onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }} className="group px-8 py-4 rounded-lg border border-primary text-primary font-medium hover:bg-primary hover:text-black transition-all duration-300 hover:shadow-glow active:scale-95 backdrop-blur-sm bg-black/20">
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group px-8 py-4 rounded-lg border border-primary text-primary font-medium hover:bg-primary hover:text-black transition-all duration-300 hover:shadow-glow active:scale-95 backdrop-blur-sm bg-black/20"
+                >
                   {t.hero.btnContact} <span className="inline-block ml-1 group-hover:translate-x-1 transition-transform">→</span>
                 </a>
               </div>
@@ -131,7 +157,8 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
                   const isDs3 = exp.company.includes('DS3');
                   const isNaratas = exp.company.includes('Naratas');
                   const hasLink = isDs3 || isNaratas;
-                  const linkPath = isDs3 ? '/pkl-ftth' : (isNaratas ? '/naratas-support' : '');
+                  // Slug sesuai tabel `projects` di Supabase (lihat seed.sql)
+                  const linkPath = isDs3 ? '/proyek/pkl-ds3' : (isNaratas ? '/proyek/naratas' : '');
 
                   return (
                     <div key={idx} className="reveal relative flex items-center justify-between group" style={{ transitionDelay: `${idx * 200}ms` }}>
@@ -210,129 +237,9 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
               <h2 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{t.sectionTitles.projects}</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div 
-                className="reveal cursor-pointer group rounded-2xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 glow-border hover:shadow-ambient dark:hover:shadow-ambient-dark bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant flex flex-col"
-                onClick={() => navigate('/network-docs')}
-              >
-                {/* Thumbnail Image */}
-                <div className="relative aspect-video w-full overflow-hidden border-b border-outline-variant dark:border-dark-outline-variant bg-black/20">
-                  <img 
-                    src={topoThumbnail} 
-                    alt="Topologi Jaringan Thumbnail" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
-                  
-                  {/* Arrow Icon over image */}
-                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                    <ArrowUpRight className="w-5 h-5" />
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="p-5 md:p-6 flex-grow flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary-fixed dark:bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shrink-0">
-                      <Server className="w-5 h-5" />
-                    </div>
-                    <h3 className="font-bold text-lg xl:text-xl text-on-surface dark:text-dark-on-surface line-clamp-2">
-                      {lang === 'id' ? 'Topologi & Konfigurasi' : 'Network Topology'}
-                    </h3>
-                  </div>
-                  <p className="text-sm text-on-surface-variant dark:text-dark-on-surface-variant mb-6 leading-relaxed flex-grow line-clamp-3">
-                    {lang === 'id' ? 'Dokumentasi proyek konfigurasi MikroTik, desain topologi Cisco, dan troubleshooting.' : 'Documentation of MikroTik configuration projects, Cisco topology designs, and troubleshooting.'}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">MikroTik</span>
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Cisco</span>
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Topologi</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Project 2: Web Portal & Data Wilayah */}
-              <div 
-                className="reveal cursor-pointer group rounded-2xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 glow-border hover:shadow-ambient dark:hover:shadow-ambient-dark bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant flex flex-col"
-                onClick={() => navigate('/tugas-web')}
-              >
-                {/* Thumbnail Image */}
-                <div className="relative aspect-video w-full overflow-hidden border-b border-outline-variant dark:border-dark-outline-variant bg-black/20">
-                  <img 
-                    src={tugasThumbnail} 
-                    alt="Portal Web & Data Wilayah Thumbnail" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
-                  
-                  {/* Arrow Icon over image */}
-                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                    <ArrowUpRight className="w-5 h-5" />
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="p-5 md:p-6 flex-grow flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary-fixed dark:bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shrink-0">
-                      <Globe className="w-5 h-5" />
-                    </div>
-                    <h3 className="font-bold text-lg xl:text-xl text-on-surface dark:text-dark-on-surface line-clamp-2">
-                      {lang === 'id' ? 'Portal Web & Data Wilayah' : 'Web Portal & Regional Data'}
-                    </h3>
-                  </div>
-                  <p className="text-sm text-on-surface-variant dark:text-dark-on-surface-variant mb-6 leading-relaxed flex-grow line-clamp-3">
-                    {lang === 'id' ? 'Pengembangan aplikasi portal web interaktif, validasi autentikasi pengguna, dan Sistem Informasi Wilayah Terpadu (UIA).' : 'Development of interactive web portal application, user authentication validation, and Integrated Regional Information System (UIA).'}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Web Dev</span>
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Autentikasi</span>
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Cascading Data</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Project 3: Workshop NGOBAR (Ngoding Bareng) */}
-              <div 
-                className="reveal cursor-pointer group rounded-2xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 glow-border hover:shadow-ambient dark:hover:shadow-ambient-dark bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant flex flex-col"
-                onClick={() => navigate('/ngobar-workshop')}
-              >
-                {/* Thumbnail Image */}
-                <div className="relative aspect-video w-full overflow-hidden border-b border-outline-variant dark:border-dark-outline-variant bg-black/20">
-                  <img 
-                    src={ngobarThumbnail} 
-                    alt="Workshop NGOBAR Thumbnail" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
-                  
-                  {/* Arrow Icon over image */}
-                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                    <ArrowUpRight className="w-5 h-5" />
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="p-5 md:p-6 flex-grow flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary-fixed dark:bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shrink-0">
-                      <Presentation className="w-5 h-5" />
-                    </div>
-                    <h3 className="font-bold text-lg xl:text-xl text-on-surface dark:text-dark-on-surface line-clamp-2">
-                      {lang === 'id' ? 'Workshop NGOBAR (Ngoding Bareng)' : 'NGOBAR Web Dev Workshop'}
-                    </h3>
-                  </div>
-                  <p className="text-sm text-on-surface-variant dark:text-dark-on-surface-variant mb-6 leading-relaxed flex-grow line-clamp-3">
-                    {lang === 'id' ? 'Pelatihan dasar pembuatan kerangka dan gaya website (HTML & CSS) sebagai Pemateri Utama diselenggarakan HMTF UIA.' : 'Hands-on web development workshop (HTML & CSS) as Keynote Speaker organized by HMTF UIA.'}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">Pemateri</span>
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">HTML & CSS</span>
-                    <span className="text-[10px] font-mono px-2 py-1 rounded border border-outline-variant dark:border-dark-outline-variant">HMTF UIA</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Suspense fallback={<div className="min-h-[200px]" />}>
+              <ProjectCards lang={lang} />
+            </Suspense>
           </div>
         </section>
 
@@ -373,7 +280,7 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
                   <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><Mail className="w-4 h-4 md:w-5 md:h-5" /></div>
                   <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">Email</p><p className="font-medium text-sm md:text-base break-all">{t.personal.email}</p></div>
                 </a>
-                <a href={`https://wa.me/${t.personal.phone}`} target="_blank" rel="noreferrer" className="reveal reveal-delay-1 flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] glow-border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant">
+                <a href={waLink} target="_blank" rel="noreferrer" className="reveal reveal-delay-1 flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] glow-border bg-surface-lowest border-outline-variant dark:bg-dark-surface-lowest dark:border-dark-outline-variant">
                   <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg border border-primary/30 flex items-center justify-center text-primary shrink-0"><Phone className="w-4 h-4 md:w-5 md:h-5" /></div>
                   <div className="min-w-0 flex-1"><p className="text-xs md:text-sm font-mono font-medium text-on-surface-variant dark:text-dark-on-surface-variant">WhatsApp</p><p className="font-medium text-sm md:text-base break-words">{t.personal.formattedPhone}</p></div>
                 </a>
@@ -408,7 +315,15 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
 
 export default function App() {
   const [lang, setLang] = useState('id');
-  const [isDark, setIsDark] = useState(true);
+
+  // Default TERANG. Gelap hanya jika pengunjung pernah memilihnya.
+  const [isDark, setIsDark] = useState(() => {
+    try {
+      return localStorage.getItem('theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
     if (isDark) {
@@ -418,16 +333,43 @@ export default function App() {
       document.documentElement.classList.add('light');
       document.documentElement.classList.remove('dark');
     }
+    try {
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    } catch {
+      /* penyimpanan tidak tersedia, abaikan */
+    }
   }, [isDark]);
 
   return (
-    <Routes>
-      <Route path="/" element={<HomePage lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />} />
-      <Route path="/pkl-ftth" element={<PklDetail lang={lang} isDark={isDark} />} />
-      <Route path="/naratas-support" element={<NaratasDetail lang={lang} isDark={isDark} />} />
-      <Route path="/network-docs" element={<NetworkDocs lang={lang} isDark={isDark} />} />
-      <Route path="/tugas-web" element={<TugasDetail lang={lang} isDark={isDark} />} />
-      <Route path="/ngobar-workshop" element={<NgobarDetail lang={lang} isDark={isDark} />} />
-    </Routes>
+    <>
+      <Suspense fallback={null}>
+        <Routes>
+          {/* Beranda */}
+          <Route
+            path="/"
+            element={<HomePage lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />}
+          />
+
+          {/* Halaman detail proyek (dibaca dari Supabase) */}
+          <Route path="/proyek/:slug" element={<ProjectDetail lang={lang} isDark={isDark} />} />
+
+          {/* Admin */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+          <Route path="/admin/proyek/:id" element={<RequireAdmin><ProjectForm /></RequireAdmin>} />
+
+          {/* Redirect dari link lama supaya link yang sudah tersebar tetap jalan */}
+          <Route path="/naratas-support" element={<Navigate to="/proyek/naratas" replace />} />
+          <Route path="/pkl-ftth" element={<Navigate to="/proyek/pkl-ds3" replace />} />
+          <Route path="/ngobar-workshop" element={<Navigate to="/proyek/ngobar" replace />} />
+          <Route path="/tugas-web" element={<Navigate to="/proyek/tugas-uas-web" replace />} />
+          <Route path="/network-docs" element={<Navigate to="/proyek/network-docs" replace />} />
+
+          {/* Jalur tidak dikenal kembali ke beranda */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+      <CookieConsent />
+    </>
   );
 }
