@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect, useMemo } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { Briefcase, GraduationCap, CheckCircle2, Mail, Phone, MapPin, ChevronRight, ArrowUpRight } from 'lucide-react';
 
@@ -17,18 +17,20 @@ const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const ProjectForm = lazy(() => import('./pages/admin/ProjectForm'));
 const ProjectCards = lazy(() => import('./components/ProjectCards'));
+const ProfileForm = lazy(() => import('./pages/admin/ProfileForm'));
 
 import { CONTENT } from './data/content';
+import { mergeContent, readProfileCache, writeProfileCache } from './data/mergeContent';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import heroBg from './images/hero-bg.jpg';
 
-function HomePage({ lang, setLang, isDark, setIsDark }) {
+function HomePage({ lang, setLang, isDark, setIsDark, content }) {
   const navigate = useNavigate();
   const location = useLocation();
 
   const containerRef = useScrollReveal([lang]);
 
-  const t = CONTENT[lang];
+  const t = content[lang];
   const currentYear = new Date().getFullYear();
 
   // Saat kembali dari halaman detail, langsung scroll ke bagian yang dituju
@@ -47,9 +49,10 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
 
   // Link WhatsApp dengan pesan yang sudah terisi (mengikuti bahasa aktif)
   const waMessage =
-    lang === 'id'
+    t.personal.waMessage ||
+    (lang === 'id'
       ? 'Halo Alwin, saya melihat portofolio Anda dan ingin berdiskusi.'
-      : 'Hi Alwin, I saw your portfolio and would like to talk.';
+      : 'Hi Alwin, I saw your portfolio and would like to talk.');
   const waLink = `https://wa.me/${t.personal.phone}?text=${encodeURIComponent(waMessage)}`;
 
   return (
@@ -154,11 +157,13 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
               </div>
               <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-px before:bg-gradient-to-b before:from-primary before:via-primary/20 before:to-transparent">
                 {t.experience.map((exp, idx) => {
-                  const isDs3 = exp.company.includes('DS3');
-                  const isNaratas = exp.company.includes('Naratas');
-                  const hasLink = isDs3 || isNaratas;
-                  // Slug sesuai tabel `projects` di Supabase (lihat seed.sql)
-                  const linkPath = isDs3 ? '/proyek/pkl-ds3' : (isNaratas ? '/proyek/naratas' : '');
+                  // Slug diatur di admin (Edit profil). Tebakan dari nama perusahaan
+                  // hanya dipakai untuk data bawaan content.js yang belum punya projectSlug.
+                  const slug =
+                    exp.projectSlug ??
+                    (exp.company.includes('DS3') ? 'intern-ds3' : exp.company.includes('Naratas') ? 'naratas' : '');
+                  const hasLink = Boolean(slug);
+                  const linkPath = hasLink ? `/proyek/${slug}` : '';
 
                   return (
                     <div key={idx} className="reveal relative flex items-center justify-between group" style={{ transitionDelay: `${idx * 200}ms` }}>
@@ -316,6 +321,23 @@ function HomePage({ lang, setLang, isDark, setIsDark }) {
 export default function App() {
   const [lang, setLang] = useState('id');
 
+  // Isi profil dari Supabase (tabel site_profile) ditimpa di atas content.js.
+  // Cache lokal dipakai agar tidak ada kedipan teks lama saat halaman dibuka.
+  const [override, setOverride] = useState(readProfileCache);
+  useEffect(() => {
+    let cancelled = false;
+    import('./lib/profile')
+      .then((m) => m.getProfile())
+      .then((data) => {
+        if (cancelled) return;
+        writeProfileCache(data);
+        setOverride(data);
+      })
+      .catch(() => { /* Supabase bermasalah: tetap pakai content.js / cache */ });
+    return () => { cancelled = true; };
+  }, []);
+  const content = useMemo(() => mergeContent(CONTENT, override), [override]);
+
   // Default TERANG. Gelap hanya jika pengunjung pernah memilihnya.
   const [isDark, setIsDark] = useState(() => {
     try {
@@ -347,20 +369,23 @@ export default function App() {
           {/* Beranda */}
           <Route
             path="/"
-            element={<HomePage lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />}
+            element={<HomePage lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} content={content} />}
           />
 
           {/* Halaman detail proyek (dibaca dari Supabase) */}
-          <Route path="/proyek/:slug" element={<ProjectDetail lang={lang} isDark={isDark} />} />
+          <Route path="/proyek/:slug" element={<ProjectDetail lang={lang} isDark={isDark} content={content} />} />
+          {/* Slug lama pkl-ds3 diganti intern-ds3; link lama tetap jalan */}
+          <Route path="/proyek/pkl-ds3" element={<Navigate to="/proyek/intern-ds3" replace />} />
 
           {/* Admin */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+          <Route path="/admin/profil" element={<RequireAdmin><ProfileForm /></RequireAdmin>} />
           <Route path="/admin/proyek/:id" element={<RequireAdmin><ProjectForm /></RequireAdmin>} />
 
           {/* Redirect dari link lama supaya link yang sudah tersebar tetap jalan */}
           <Route path="/naratas-support" element={<Navigate to="/proyek/naratas" replace />} />
-          <Route path="/pkl-ftth" element={<Navigate to="/proyek/pkl-ds3" replace />} />
+          <Route path="/pkl-ftth" element={<Navigate to="/proyek/intern-ds3" replace />} />
           <Route path="/ngobar-workshop" element={<Navigate to="/proyek/ngobar" replace />} />
           <Route path="/tugas-web" element={<Navigate to="/proyek/tugas-uas-web" replace />} />
           <Route path="/network-docs" element={<Navigate to="/proyek/network-docs" replace />} />
