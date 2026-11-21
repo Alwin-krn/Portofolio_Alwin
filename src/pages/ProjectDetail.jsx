@@ -29,7 +29,7 @@ const UI = {
 const chipCls =
   'flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-lowest/80 dark:bg-dark-surface-lowest/80 border border-outline-variant dark:border-dark-outline-variant backdrop-blur-sm';
 
-export default function ProjectDetail({ lang = 'id', isDark = true, slug: slugProp }) {
+export default function ProjectDetail({ lang = 'id', isDark = true, slug: slugProp, content = CONTENT }) {
   const params = useParams();
   const slug = slugProp || params.slug;
   const navigate = useNavigate();
@@ -329,7 +329,7 @@ export default function ProjectDetail({ lang = 'id', isDark = true, slug: slugPr
       {/* FOOTER */}
       <footer className="py-8 px-6 text-center border-t border-outline-variant bg-surface-low text-on-surface-variant dark:border-dark-outline-variant dark:bg-dark-surface-low dark:text-dark-on-surface-variant">
         <p className="text-sm">
-          &copy; {new Date().getFullYear()} {CONTENT[lang].personal.name}. {CONTENT[lang].footer}
+          &copy; {new Date().getFullYear()} {content[lang].personal.name}. {content[lang].footer}
         </p>
       </footer>
     </div>
